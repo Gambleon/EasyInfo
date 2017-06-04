@@ -1,6 +1,5 @@
 module.exports = {
-    getExtensions: function (pages, paths)
-    {
+    getExtensions: function (pages, paths) {
         var csharp = pages.category('csharp', 'C#');
         csharp.item('about', 'About C#', pages.html(paths.path.join(__dirname, 'csharp/about.html')))
         var errors = csharp.category('error', 'Errors');
@@ -8,15 +7,29 @@ module.exports = {
         var types = csharp.category('types', 'Types');
         var systemTypes = types.category('system', 'System');
         systemTypes.item('exception', 'Exception', pages.raw('Represents errors that occur during application execution.'));
-        //var createItem = pages.item('create', 'Create your own extension', pages.raw('Create a file in the <code>extension</code> folder named <code>UNIQUE_EXTENSION_NAME_HERE.js</code><br /><br /><a href=\'javascript:getContent(\'ext\",\'add\')\'>Next page</a>'))
 
-        //extensibilityCatgory.addItem(createItem);
-
-        //extensibilityCatgory.item('add', 'Add pages to your extension', pages.raw('Paste the following code in it: <br /><br /><code>module.exports = {<br />&nbsp;&nbsp;&nbsp;&nbsp;getPages: function getPages(pages, paths)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return [<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pages.page(\'category-id-here\', \'CATEGORY_HERE\', \'item-id-here\', \'ITEM_HERE\' pages.raw(\'RAW_HTML_HERE\'))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}</code>'))
-        return [ 
+        var exceptions = csharp.category('exceptions', 'Exceptions');
+        exceptions.item('list', 'List of Exceptions', pages.template('<h1>List of exceptions</h1>', '$(Namespace).$(Exception)', '', pages.raw('<br />'), exceptionData([
+            {exception: 'Exception', namespace: 'System'},
+            {exception: 'FileNotFoundException', namespace: 'System.IO'}
+        ], pages)));
+        
+        return [
             csharp
-            //pages.page("ext", "Extensibility", "create", "Create your own extension", pages.raw("Create a file in the <code>extension</code> folder named <code>UNIQUE_EXTENSION_NAME_HERE.js</code><br /><br /><a href='javascript:getContent(\"ext\",\"add\")'>Next page</a>")),
-			//pages.page("ext", "Extensibility", "add", "Add pages to your extension", pages.raw("Paste the following code in it: <br /><br /><code>module.exports = {<br />&nbsp;&nbsp;&nbsp;&nbsp;getPages: function getPages(pages, paths)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return [<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pages.page('category-id-here', 'CATEGORY_HERE', 'item-id-here', 'ITEM_HERE' pages.raw('RAW_HTML_HERE'))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}</code>"))
         ];
     }
+}
+
+const transformer = require('../lib/transformer.js');
+const join = require('path').join;
+
+function exceptionData(array, pages)
+{
+    if(typeof transformer === 'undefined')
+    {
+        transformer = require('../lib/transformer.js');
+    }
+    return pages.data(transformer.transform(array, function(item){
+        return [['Exception', item.exception], ['Namespace', item.namespace]];
+    }));
 }
