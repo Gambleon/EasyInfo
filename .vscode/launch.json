@@ -8,9 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch EasyInfo",
-            "runtimeExecutable": "C:/Users/Julian/AppData/Roaming/npm/electron",
+            "runtimeExecutable": "C:/Users/User/AppData/Roaming/npm/electron",
             "windows": {
-                "runtimeExecutable": "C:/Users/Julian/AppData/Roaming/npm/electron.cmd"
+                "runtimeExecutable": "C:/Users/User/AppData/Roaming/npm/electron.cmd"
             },
             "program": "${workspaceRoot}/app/main.js",
             "protocol": "legacy"
